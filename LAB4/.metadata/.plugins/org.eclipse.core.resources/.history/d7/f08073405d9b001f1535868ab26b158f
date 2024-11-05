@@ -1,0 +1,10 @@
+/*
+ * scheduler.c
+ *
+ *  Created on: Nov 5, 2024
+ *      Author: User
+ */
+
+#include "scheduler.h"
+
+sTasks SCH_tasks_G[SCH_MAX_TASKS];

@@ -1,0 +1,36 @@
+!SESSION 2024-11-05 16:12:20.699 -----------------------------------------------
+eclipse.buildId=Version 1.10.1
+java.version=11.0.14.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-05 16:13:55.498
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-05 16:13:55.699
+!MESSAGE Log4j initialized with config file D:\BKU\Year 3\VXL-VDK\git4\LAB4\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-05 16:14:04.536
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-11-05 16:17:06.434
+!MESSAGE Indexed 'LAB4' (17 sources, 78 headers) in 17.8 sec: 3,631 declarations; 13,112 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.012%)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2024-11-05 17:18:33.616
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+!SESSION 2024-11-05 17:25:36.704 -----------------------------------------------
+eclipse.buildId=Version 1.10.1
+java.version=11.0.14.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-05 17:25:48.882
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-05 17:25:49.041
+!MESSAGE Log4j initialized with config file D:\BKU\Year 3\VXL-VDK\git4\LAB4\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-05 17:25:59.589
+!MESSAGE Started RMI Server, listening on port 41337
