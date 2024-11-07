@@ -1,4 +1,4 @@
-18:00:52 **** Incremental Build of configuration Debug for project LAB4 ****
+22:15:15 **** Incremental Build of configuration Debug for project LAB4 ****
 make -j4 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103x6 -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
 arm-none-eabi-gcc -o "LAB4.elf" @"objects.list"   -mcpu=cortex-m3 -T"D:\BKU\Year 3\VXL-VDK\git4\LAB4\LAB4\STM32F103C6TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LAB4.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -8,10 +8,10 @@ arm-none-eabi-size   LAB4.elf
 arm-none-eabi-objdump -h -S  LAB4.elf  > "LAB4.list"
 arm-none-eabi-objcopy  -O ihex  LAB4.elf  "LAB4.hex"
    text	   data	    bss	    dec	    hex	filename
-   7672	     20	   2444	  10136	   2798	LAB4.elf
+  10260	     64	   2488	  12812	   320c	LAB4.elf
 Finished building: default.size.stdout
-Finished building: LAB4.hex
  
+Finished building: LAB4.hex
  
 Finished building: LAB4.list
  

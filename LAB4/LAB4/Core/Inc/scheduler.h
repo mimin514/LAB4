@@ -9,7 +9,7 @@
 #define INC_SCHEDULER_H_
 
 #include <stdint.h>
-
+#define TICK 10
 typedef struct{
 	void (*pTask)(void);
 	uint32_t	Delay;
