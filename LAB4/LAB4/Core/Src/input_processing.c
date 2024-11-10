@@ -26,11 +26,11 @@ void handle_mode(void) {
 		case 4:
 			modify_green_duration();
 			break;
-		case 5:
-			turn_red1();
-			break;
-		case 6:
-			turn_green1();
+//		case 5:
+//			turn_red1();
+//			break;
+//		case 6:
+//			turn_green1();
 			break;
 	}
 

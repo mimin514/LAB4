@@ -1,0 +1,54 @@
+#include "main.h"
+#include "input_reading.h"
+#include "led_display.h"
+
+#define N0_OF_BUTTONS 4
+#define DURATION_FOR_AUTO_INCREASING 100
+#define BUTTON_IS_PRESSED GPIO_PIN_RESET
+#define BUTTON_IS_RELEASED GPIO_PIN_SET
+
+static GPIO_PinState buttonBuffer[N0_OF_BUTTONS];
+static GPIO_PinState debounceButtonBuffer1[N0_OF_BUTTONS];
+static GPIO_PinState debounceButtonBuffer2[N0_OF_BUTTONS];
+static uint8_t flagForButtonPress1s[N0_OF_BUTTONS];
+static uint16_t counterForButtonPress1s[N0_OF_BUTTONS];
+
+#define DEBOUNCE_DELAY 50  // Độ trễ debounce (ms)
+
+uint32_t last_debounce_time[4] = {0};  // Lưu thời gian debounce cho mỗi nút
+uint8_t prev_button_state[4] = {GPIO_PIN_SET, GPIO_PIN_SET, GPIO_PIN_SET, GPIO_PIN_SET};  // Trạng thái trước của các nút
+uint8_t button_state[4];  // Trạng thái hiện tại của các nút
+
+void button_reading(void) {
+	// Mảng chứa các chân của nút
+	    uint16_t button_pins[4] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
+
+	    // Đọc trạng thái của các nút
+	    for (int i = 0; i < 4; i++) {
+	        button_state[i] = HAL_GPIO_ReadPin(GPIOB, button_pins[i]);
+
+	        // Kiểm tra thời gian debounce
+	        if ((HAL_GetTick() - last_debounce_time[i]) > DEBOUNCE_DELAY) {
+	            // Kiểm tra nếu trạng thái nút thay đổi từ chưa nhấn sang nhấn
+	            if (button_state[i] == GPIO_PIN_RESET && prev_button_state[i] == GPIO_PIN_SET) {
+	                // Đảo trạng thái LED tương ứng với nút
+	                HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8 + i);  // Đảo trạng thái LED (GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11)
+	                last_debounce_time[i] = HAL_GetTick();  // Cập nhật thời gian debounce
+	            }
+	        }
+
+	        // Cập nhật trạng thái nút trước
+	        prev_button_state[i] = button_state[i];
+
+    }
+}
+
+unsigned char is_button_pressed(uint8_t index){
+    if (index >= N0_OF_BUTTONS) return 0;
+    return (buttonBuffer[index] == BUTTON_IS_PRESSED);
+}
+
+unsigned char is_button_pressed_1s(unsigned char index){
+    if (index >= N0_OF_BUTTONS) return 0xFF;
+    return (flagForButtonPress1s[index] == 1);
+}

@@ -26,7 +26,7 @@ extern sTasks SCH_tasks_G[SCH_MAX_TASKS];
 void SCH_Init(void);
 
 // ~setTimer
-uint32_t SCH_Add_Task ( void (*pFunction)(),
+void SCH_Add_Task ( void (*pFunction)(),
 					uint32_t DELAY,
 					uint32_t PERIOD);
 
@@ -35,5 +35,4 @@ void SCH_Update(void); // luon nam trong ngat timer
 
 void SCH_Dispatch_Tasks(void); // luon nam trong while(1)
 
-uint8_t SCH_Delete_Task(uint32_t taskID);
 #endif /* INC_SCHEDULER_H_ */

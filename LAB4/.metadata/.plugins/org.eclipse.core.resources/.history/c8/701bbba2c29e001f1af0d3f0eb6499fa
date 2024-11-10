@@ -1,0 +1,62 @@
+/*
+ * input_reading.c
+ *
+ *  Created on: Sep 30, 2024
+ *      Author: User
+ */
+
+#include "main.h"
+#include "input_reading.h"
+#include "led_display.h"
+#define N0_OF_BUTTONS 	4
+
+#define DURATION_FOR_AUTO_INCREASING 	100
+#define BUTTON_IS_PRESSED 		GPIO_PIN_RESET
+#define BUTTON_IS_RELEASED 		GPIO_PIN_SET
+#define DEBOUNCE_DELAY 50
+static GPIO_PinState buttonBuffer[N0_OF_BUTTONS];
+static GPIO_PinState debounceButtonBuffer1[N0_OF_BUTTONS];
+static GPIO_PinState debounceButtonBuffer2[N0_OF_BUTTONS];
+static uint8_t flagForButtonPress1s[N0_OF_BUTTONS];
+uint32_t last_debounce_time[N0_OF_BUTTONS];   // Mảng thời gian debounce của mỗi nút
+uint8_t prev_button_state[N0_OF_BUTTONS];
+static uint16_t counterForButtonPress1s[N0_OF_BUTTONS];
+
+void button_reading(void) {
+	uint16_t button_pins[N0_OF_BUTTONS] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_8}; // Các chân của nút
+
+	    for (uint8_t i = 0; i < N0_OF_BUTTONS; i++) {
+	        // Đọc trạng thái nút và thực hiện debounce
+	        debounceButtonBuffer2[i] = debounceButtonBuffer1[i];
+	        debounceButtonBuffer1[i] = HAL_GPIO_ReadPin(GPIOB, button_pins[i]);
+
+	        // Nếu trạng thái của nút không thay đổi, lưu vào buffer
+	        if (debounceButtonBuffer1[i] == debounceButtonBuffer2[i]) {
+	            buttonBuffer[i] = debounceButtonBuffer1[i];
+	        }
+
+	        // Kiểm tra nếu thời gian debounce đã đủ lâu
+	        uint32_t current_time = HAL_GetTick();
+	        if ((current_time - last_debounce_time[i]) > DEBOUNCE_DELAY) {
+	            // Kiểm tra nếu trạng thái nút thay đổi từ chưa nhấn sang nhấn
+	            if (buttonBuffer[i] == BUTTON_IS_PRESSED && prev_button_state[i] == GPIO_PIN_SET) {
+	                // Logic xử lý khi nút được nhấn, ví dụ: Toggle trạng thái LED hoặc thực hiện hành động khác
+	                // Không bật/tắt LED nữa, bạn có thể thay đổi hành động ở đây
+	            }
+	            // Cập nhật thời gian debounce
+	            last_debounce_time[i] = current_time;
+	        }
+
+	        // Cập nhật trạng thái nút trước
+	        prev_button_state[i] = buttonBuffer[i];
+	    }
+	}
+
+unsigned char is_button_pressed(uint8_t index){
+	 if(index >= N0_OF_BUTTONS) return 0;
+	 return (buttonBuffer[index] == BUTTON_IS_PRESSED);
+ }
+ unsigned char is_button_pressed_1s(unsigned char index){
+	 if(index >= N0_OF_BUTTONS) return 0xff;
+	 return (flagForButtonPress1s[index] == 1);
+ }

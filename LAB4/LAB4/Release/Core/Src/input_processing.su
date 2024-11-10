@@ -1,0 +1,3 @@
+../Core/Src/input_processing.c:15:6:handle_mode	0	static
+../Core/Src/input_processing.c:48:6:getKeyInput	32	static
+../Core/Src/input_processing.c:71:6:fsm_for_input_processing	8	static
