@@ -1,0 +1,129 @@
+#include <stdint.h>
+#include <stdio.h>
+
+#define SCH_MAX_TASKS 10
+
+// Định nghĩa cấu trúc nhiệm vụ
+typedef struct Task {
+    void (*pTask)(void);  // Con trỏ đến hàm nhiệm vụ
+    uint32_t delay;       // Thời gian delay trước khi thực thi
+    uint32_t period;      // Chu kỳ nhiệm vụ (0 nếu là nhiệm vụ một lần)
+    struct Task* next;    // Con trỏ đến nhiệm vụ tiếp theo
+} Task;
+
+// Biến toàn cục để lưu các nhiệm vụ
+Task* taskList = NULL;  // Danh sách nhiệm vụ (head)
+
+// Hàm khởi tạo Scheduler
+void SCH_Init(void) {
+    taskList = NULL;  // Bắt đầu với danh sách trống
+}
+
+// Thêm nhiệm vụ vào danh sách liên kết
+uint8_t SCH_Add_Task(void (*pFunction)(void), uint32_t delay, uint32_t period) {
+    // Tạo nhiệm vụ mới
+    Task* newTask = (Task*)malloc(sizeof(Task));
+    if (newTask == NULL) {
+        return SCH_MAX_TASKS;  // Không đủ bộ nhớ
+    }
+
+    newTask->pTask = pFunction;
+    newTask->delay = delay;
+    newTask->period = period;
+    newTask->next = NULL;
+
+    // Thêm nhiệm vụ vào danh sách
+    if (taskList == NULL) {
+        taskList = newTask;  // Danh sách trống, gán nhiệm vụ đầu tiên
+    } else {
+        Task* current = taskList;
+        while (current->next != NULL) {
+            current = current->next;  // Duyệt tới cuối danh sách
+        }
+        current->next = newTask;  // Thêm nhiệm vụ mới vào cuối danh sách
+    }
+    return 0;
+}
+
+// Cập nhật thời gian còn lại của các nhiệm vụ
+void SCH_Update(void) {
+    Task* current = taskList;
+
+    while (current != NULL) {
+        if (current->delay == 0) {
+            // Nhiệm vụ đã đến thời gian thực thi, đánh dấu và thực thi
+            current->pTask();  // Gọi hàm nhiệm vụ
+
+            if (current->period > 0) {
+                // Nếu là nhiệm vụ lặp lại, thiết lập lại thời gian delay
+                current->delay = current->period;
+            } else {
+                // Nếu là nhiệm vụ một lần, xóa nhiệm vụ khỏi danh sách
+                SCH_Delete_Task(current);
+                continue;  // Tránh việc thay đổi con trỏ trong khi duyệt
+            }
+        } else {
+            // Giảm thời gian delay cho nhiệm vụ
+            current->delay--;
+        }
+
+        // Di chuyển đến nhiệm vụ tiếp theo trong danh sách
+        current = current->next;
+    }
+}
+
+// Xóa nhiệm vụ khỏi danh sách
+void SCH_Delete_Task(Task* task) {
+    Task* current = taskList;
+    if (current == task) {
+        // Nếu nhiệm vụ cần xóa là phần tử đầu tiên
+        taskList = task->next;
+        free(task);
+        return;
+    }
+
+    while (current != NULL) {
+        if (current->next == task) {
+            current->next = task->next;  // Bỏ qua nhiệm vụ cần xóa
+            free(task);
+            return;
+        }
+        current = current->next;
+    }
+}
+
+// Hàm dispatch (thực thi các nhiệm vụ)
+void SCH_Dispatch_Tasks(void) {
+    SCH_Update();  // Gọi hàm cập nhật và thực thi nhiệm vụ
+}
+
+// Ví dụ về nhiệm vụ
+void Task1(void) {
+    printf("Task 1 executed\n");
+}
+
+void Task2(void) {
+    printf("Task 2 executed\n");
+}
+
+void Task3(void) {
+    printf("Task 3 executed\n");
+}
+
+// Hàm main để kiểm thử
+int main(void) {
+    SCH_Init();  // Khởi tạo Scheduler
+
+    // Thêm các nhiệm vụ vào Scheduler
+    SCH_Add_Task(Task1, 0, 3);  // Task1 chạy ngay và lặp lại mỗi 3 ticks
+    SCH_Add_Task(Task2, 1, 5);  // Task2 chạy sau 1 tick và lặp lại mỗi 5 ticks
+    SCH_Add_Task(Task3, 2, 0);  // Task3 chạy sau 2 ticks và chỉ chạy một lần
+
+    // Giả lập vòng lặp chính, gọi `SCH_Dispatch_Tasks()` mỗi tick
+    for (int i = 0; i < 10; i++) {
+        printf("Tick: %d\n", i);
+        SCH_Dispatch_Tasks();  // Cập nhật và thực thi nhiệm vụ
+    }
+
+    return 0;
+}
